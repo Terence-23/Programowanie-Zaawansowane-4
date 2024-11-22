@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Stupid userpage</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <a href="/">Home </a>
+    {% if id %}
+    <h1>Hello {{ id }}!</h1>
+    {% else %}
+    <h1>Hello, World!</h1>
+    {% endif %}
+</body>
+
+</html>

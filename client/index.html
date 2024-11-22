@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript">
+
+        function get_active_polls() {
+            axios.get("https://pkotowski.pythonanywhere.com/polls").then(
+                response => {
+                    polls = response.data.polls
+                    polls_el = document.getElementById("polls");
+                    polls_el.innerHTML = ""
+                    table = "";
+                    for (var key in polls) {
+                        poll = polls[key]
+                        table += `
+                                    <tr>
+                                        <td>${poll.id}</td>
+                                        <td><button action=get_poll(${poll.id})>${poll.title}</button></td>
+                                        <td>${poll.date}</td>
+                                    </tr>`
+                    }
+                    polls_el.innerHTML += "<table><thead><th>id</th><th>Title</th><th>Date</th></thead>" + table + "</table>"
+                }
+            )
+        }
+        function login() {
+            email = document.getElementById("email_input").value;
+            password = document.getElementById("password_input").value;
+
+            form = new FormData();
+            form.append('email', email);
+            form.append('password', password);
+
+            axios.post("https://pkotowski.pythonanywhere.com/login", form).then(
+                response => {
+                    message = response.data.message;
+                    if (message === "OK") {
+                        polls = document.getElementById("polls");
+                        document.getElementById("login").classList.add("hidden");
+                        polls.classList.remove("hidden");
+
+                        console.log(response.data)
+                        const name = response.data.user[0].name;
+                        const age = response.data.user[0].age;
+                        const email = response.data.user[0].email;
+
+                        polls.innerHTML = `<table>
+    <tr>
+        <td>name</td>
+        <td>${name}</td>
+    </tr>
+    <tr>
+        <td>email</td>
+        <td>${email}</td>
+    </tr>
+    <tr>
+        <td>age</td>
+        <td>${age}</td>
+    </tr>
+</table>`;
+
+                        get_active_polls();
+
+                    }
+                    else {
+                        document.getElementById("unauthorized").classList.remove("hidden");
+                    }
+
+                }
+            )
+
+        }
+        function get_poll(id) {
+            axios.get(`https://pkotowski.pythonanywhere.com/polls/${id}`).then(
+                response => {
+                    polls = response.data.polls
+                    polls_el = document.getElementById("polls");
+                    polls_el.innerHTML = ""
+                    table = "";
+                    for (var key in polls) {
+                        poll = polls[key]
+                        table += `
+                                    <tr>
+                                        <td>${poll.id}</td>
+                                        <td><button action=get_poll(${poll.id})>${poll.title}</button></td>
+                                        <td>${poll.date}</td>
+                                    </tr>`
+                    }
+                    polls_el.innerHTML += "<br><br> <table><thead><th>id</th><th>Title</th><th>Date</th></thead>" + table + "</table>"
+                }
+            )
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <div class="" id="login">
+        <div id="unauthorized" class="hidden"> Unauthorized</div>
+        <label for="email">Email:</label><input type="text" name="email" class="input_box" id="email_input"> <br>
+        <label for="password">Password</label><input type="password" name="password" class="input_box"
+            id="password_input"><br>
+
+        <button onclick="login()">Login</button>
+    </div>
+    <div id="polls" class="hidden">
+
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Stupid userpage</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    {% if error %}
+    <h1>Couldn't login: {{ error }}</h1>
+    {% endif %}
+
+    If you don't have an account: <a href="/register"> register </a>
+
+    <form action="/login" , method="post">
+        email: <input type="text" name="user"><br>
+        password: <input type="password" name="pass"><br>
+        <button type="submit">Log in!</button>
+    </form>
+
+</body>
+
+</html>
